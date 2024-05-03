@@ -1,0 +1,29 @@
+version: '3'
+
+services:
+  php:
+    build:
+      context: ./php/
+      dockerfile: Dockerfile
+    volumes:
+      - ../engage-user/src/site/:/var/www/html
+    user: ${FIXUID:-1000}:${FIXGID:-1000}
+  caddy:
+    build:
+      context: ./caddy/
+      dockerfile: Dockerfile
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - caddy_data:/data
+      - ../engage-user/src/site/:/var/www/html
+  mix:
+    build:
+      context: ./mix/
+      dockerfile: Dockerfile
+    volumes:
+      - ../engage-user/src/site/:/www
+    user: ${FIXUID:-1000}:${FIXGID:-1000}
+volumes:
+  caddy_data:
